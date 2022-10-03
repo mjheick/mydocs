@@ -66,4 +66,5 @@ sudo cp server.* /var/www/html/simplesamlphp-1.19.6/cert
 
 # Metadata Exchange
 IdP Metadata: [https://192.168.1.x/saml2/idp/metadata.php?output=xhtml]
+
 SP Metadata: [https://192.168.1.x/module.php/saml/sp/metadata.php/default-sp?output=xhtml]
