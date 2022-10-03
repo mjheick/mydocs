@@ -62,6 +62,7 @@ Create and move IdP metadata certificates into place:
 ```
 openssl req -x509 -newkey rsa:1024 -keyout server.pem -out server.crt -sha256 -nodes -days 3650
 sudo cp server.* /var/www/html/simplesamlphp-1.19.6/cert
+sudo chown apache:apache /var/www/html/simplesamlphp-1.19.6/cert/server.*
 ```
 
 # Metadata Exchange
