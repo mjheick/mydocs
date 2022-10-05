@@ -97,12 +97,39 @@ sudo cp server.* /var/www/html/simplesamlphp-1.19.6/cert
 sudo chown apache:apache /var/www/html/simplesamlphp-1.19.6/cert/server.*
 ```
 
-# Front-End Test
+## Front-End Test
 IdP: [https://192.168.1.221/module.php/core/frontpage_welcome.php]()
 
 SP: [https://192.168.1.163/module.php/core/frontpage_welcome.php]()
 
-# Metadata Exchange
-IdP Metadata: [https://192.168.1.221/saml2/idp/metadata.php?output=xhtml]
+# SAML Time
 
-SP Metadata: [https://192.168.1.163/module.php/saml/sp/metadata.php/default-sp?output=xhtml]
+## Metadata Exchange IdP->SP
+IdP Metadata: [https://192.168.1.221/saml2/idp/metadata.php?output=xhtml]()
+
+Place this data in saml20-idp-remote.php file on the SP
+
+```sudo -u apache vi /var/www/html/simplesamlphp-1.19.6/metadata/saml20-idp-remote.php```
+
+## Metadata exchange SP->IDP
+SP Metadata: [https://192.168.1.163/module.php/saml/sp/metadata.php/default-sp?output=xhtml]()
+
+Place this data in the saml20-sp-remote.php file on the IdP
+
+```sudo -u apache vi /var/www/html/simplesamlphp-1.19.6/metadata/saml20-sp-remote.php```
+
+## Setup the correct login auth on the IDP
+
+bBy default the login module set up on IdPs is ```example-userpass```.
+
+Edit saml20-idp-hosted.php and change ```'auth'```'s value from ```example-userpass``` to ```admin```. We already have _admin_ credentials for this with the password configured as _password_.
+
+```sudo -u apache vi /var/www/html/simplesamlphp-1.19.6/metadata/saml20-idp-hosted.php```
+
+## Login to 221 from 163
+Now we should be able to do a SAML login from the SP at 163 to the IDP at 221 with _admin_/_password_:
+- [https://192.168.1.163/module.php/core/authenticate.php]()
+- Select _default-sp_
+- Select the IDP at _https://192.168.1.221/saml2/idp/metadata.php_
+- use the password _password_, select Login
+- Return to 163 and be shown the attributes provided from 221
