@@ -1,19 +1,28 @@
 # Installing SimpleSAMLphp 1.19.6 on Rocky Linux 9.0
 This is my quick go-to guide on installing [SimpleSAMLphp 1.19.6](https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.6/simplesamlphp-1.19.6.tar.gz) on [Rocky Linux 9.0](https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.0-20220805.0-x86_64-minimal.iso)
 
-# Install Rocky Linux 9.0
-Perform the standard installation, doing updates.
-root password is _password_
+# Rocky Linux 9.0
+This will be our operating system of choice for this, so we'll manually set it up from the ISOs
 
-log in as root
+## Standard Installation:
+- kdump disabled
+- automatic partitioning
+- root password is _password_
+- idp with static IP, ending octet 221 (I+D+P)
+- sp with static IP, ending octet 163 (S+P)
 
-```yum update```
+## Basic Configuration
+Reboot the systems, log in as root, do updates and set up users:
+- ```yum -y update```
+- ```reboot```
+- ```sed -i s/=enforcing/=permissive/g' /etc/selinux/config```
+- ```systemctl stop firewalld && systemctl disable firewalld```
+- ```yum -y install epel-release wget tar```
+- ```adduser user && passwd user```
+- set password to _password_, cause why not
+- run _visudo_, add ```user ALL=(ALL) ALL``` at bottom.
 
-```yum install epel-release wget tar```
-
-reboot
-
-turn off firewalld and set selinux to permissive in /etc/selinux/config
+And a final reboot.
 
 # Download SimpleSAMLphp
 ```wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.6/simplesamlphp-1.19.6.tar.gz```
