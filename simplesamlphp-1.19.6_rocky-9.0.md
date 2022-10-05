@@ -89,13 +89,15 @@ $config['technicalcontact_email'] = 'user@example.org';
 ```
 on the IdP add: ```$config['enable.saml20-idp'] = true;```
 
-## IdP Certificates
-Create and move IdP metadata certificates into place:
+## Metadata Certificates
+Create and move metadata certificates into place:
 ```
 openssl req -x509 -newkey rsa:1024 -keyout server.pem -out server.crt -sha256 -nodes -days 3650
 sudo cp server.* /var/www/html/simplesamlphp-1.19.6/cert
 sudo chown apache:apache /var/www/html/simplesamlphp-1.19.6/cert/server.*
 ```
+
+This is mainly needed for the IDP to work but can also be done on the SP for it's own certificates.
 
 ## Front-End Test
 IdP: [https://192.168.1.221/module.php/core/frontpage_welcome.php]()
