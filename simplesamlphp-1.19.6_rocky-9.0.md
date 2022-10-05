@@ -135,3 +135,18 @@ Now we should be able to do a SAML login from the SP at 163 to the IDP at 221 wi
 - Select the IDP at _https://192.168.1.221/saml2/idp/metadata.php_
 - use the password _password_, select Login
 - Return to 163 and be shown the attributes provided from 221
+
+# Secure Changes
+
+## Adding certificates to the service provider
+You can add certificates to the service provider by creating the Certificates (seen earlier), editing config/authsources.php and adding the following to the bottom:
+```
+$config['default-sp']['privatekey'] = 'server.pem';
+$config['default-sp']['certificate'] = 'server.crt';
+```
+
+# Additional Links
+
+[simplesamlphp-reference-idp-remote](https://simplesamlphp.org/docs/stable/simplesamlphp-reference-idp-remote.html)
+
+[simplesamlphp-reference-sp-remote](https://simplesamlphp.org/docs/stable/simplesamlphp-reference-sp-remote.html)
