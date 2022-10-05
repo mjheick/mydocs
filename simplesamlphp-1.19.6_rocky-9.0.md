@@ -24,29 +24,21 @@ Reboot the systems, log in as root, do updates and set up users:
 
 And a final reboot.
 
-# Download SimpleSAMLphp
-```wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.6/simplesamlphp-1.19.6.tar.gz```
-
-```tar -xf simplesamlphp-1.19.6.tar.gz```
-
 # Install and Configure Apache
-```sudo yum install httpd php mod_ssl```
+```sudo yum -y install httpd php mod_ssl```
 
-```sudo mv ~/simplesamlphp-1.19.6 /var/www/html```
+```sudo touch /etc/httpd/conf.d/simplesamlphp.conf```
 
-```chown apache:apache /var/www/html/simplesamlphp-1.19.6```
-
-```chown -R apache:apache /var/www/html/simplesamlphp-1.19.6```
-
-create /etc/httpd/conf.d/simplesamlphp.conf with contents
+## IdP Apache Configuration
+Place the following into ```/etc/httpd/conf.d/simplesamlphp.conf```
 ```
-<VirtualHost 192.168.1.x:80>
-    ServerName 192.168.1.x
+<VirtualHost 192.168.1.221:80>
+    ServerName 192.168.1.221
     DocumentRoot /var/www/html/simplesamlphp-1.19.6/www
 </VirtualHost>
 
-<VirtualHost 192.168.1.x:443>
-    ServerName 192.168.1.x
+<VirtualHost 192.168.1.221:443>
+    ServerName 192.168.1.221
     DocumentRoot /var/www/html/simplesamlphp-1.19.6/www
     SSLEngine on
     SSLCertificateFile /etc/pki/tls/certs/localhost.crt
@@ -54,19 +46,50 @@ create /etc/httpd/conf.d/simplesamlphp.conf with contents
 </VirtualHost>
 ```
 
+## SP Apache Configuration
+Place the following into ```/etc/httpd/conf.d/simplesamlphp.conf```
+```
+<VirtualHost 192.168.1.163:80>
+    ServerName 192.168.1.163
+    DocumentRoot /var/www/html/simplesamlphp-1.19.6/www
+</VirtualHost>
+
+<VirtualHost 192.168.1.163:443>
+    ServerName 192.168.1.163
+    DocumentRoot /var/www/html/simplesamlphp-1.19.6/www
+    SSLEngine on
+    SSLCertificateFile /etc/pki/tls/certs/localhost.crt
+    SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
+</VirtualHost>
+```
+
+## Start the process
+
 ```sudo systemctl start httpd```
 
-# Configure SimpleSAMLphp
-edit ```/var/www/html/simplesamlphp-1.19.6/config/config.php```
+# SimpleSAMLphp
+
+## Download and Install
+- ```wget https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.6/simplesamlphp-1.19.6.tar.gz```
+- ```tar -xf simplesamlphp-1.19.6.tar.gz```
+- ```sudo mv ~/simplesamlphp-1.19.6 /var/www/html```
+- ```sudo chown apache:apache /var/www/html/simplesamlphp-1.19.6```
+- ```sudo chown -R apache:apache /var/www/html/simplesamlphp-1.19.6```
+
+## Configure SimpleSAMLphp
+edit ```/var/www/html/simplesamlphp-1.19.6/config/config.php``` and place the following at the bottom
+
+```sudo -u apache vi /var/www/html/simplesamlphp-1.19.6/config/config.php```
 
 ```
-'baseurlpath' => '/',
-'secretsalt' => 'secretsalt',
-'auth.adminpassword' => 'password',
-'technicalcontact_email' => 'user@example.org',
+$config['baseurlpath'] = '/';
+$config['baseurlpath'] = 'secretsalt';
+$config['baseurlpath'] = 'password';
+$config['baseurlpath'] = 'user@example.org';
 ```
-on the IdP set: ```'enable.saml20-idp' => true,```
+on the IdP add: ```$config['enable.saml20-idp'] = true;```
 
+## IdP Certificates
 Create and move IdP metadata certificates into place:
 ```
 openssl req -x509 -newkey rsa:1024 -keyout server.pem -out server.crt -sha256 -nodes -days 3650
