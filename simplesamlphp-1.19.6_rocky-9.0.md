@@ -83,9 +83,9 @@ edit ```/var/www/html/simplesamlphp-1.19.6/config/config.php``` and place the fo
 
 ```
 $config['baseurlpath'] = '/';
-$config['baseurlpath'] = 'secretsalt';
-$config['baseurlpath'] = 'password';
-$config['baseurlpath'] = 'user@example.org';
+$config['secretsalt'] = 'secretsalt';
+$config['auth.adminpassword'] = 'password';
+$config['technicalcontact_email'] = 'user@example.org';
 ```
 on the IdP add: ```$config['enable.saml20-idp'] = true;```
 
@@ -97,7 +97,12 @@ sudo cp server.* /var/www/html/simplesamlphp-1.19.6/cert
 sudo chown apache:apache /var/www/html/simplesamlphp-1.19.6/cert/server.*
 ```
 
-# Metadata Exchange
-IdP Metadata: [https://192.168.1.x/saml2/idp/metadata.php?output=xhtml]
+# Front-End Test
+IdP: [https://192.168.1.221/module.php/core/frontpage_welcome.php]()
 
-SP Metadata: [https://192.168.1.x/module.php/saml/sp/metadata.php/default-sp?output=xhtml]
+SP: [https://192.168.1.163/module.php/core/frontpage_welcome.php]()
+
+# Metadata Exchange
+IdP Metadata: [https://192.168.1.221/saml2/idp/metadata.php?output=xhtml]
+
+SP Metadata: [https://192.168.1.163/module.php/saml/sp/metadata.php/default-sp?output=xhtml]
